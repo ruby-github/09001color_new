@@ -267,7 +267,7 @@ void ImageArea::ClearCFMPreBox(const RectArea& area) {
 
 GtkWidget * ImageArea::Create(void) {
     m_imageDA = gtk_drawing_area_new();
-    gtk_drawing_area_size(GTK_DRAWING_AREA(m_imageDA), IMG_AREA_W, IMG_AREA_H);
+    gtk_drawing_area_size(GTK_DRAWING_AREA(m_imageDA), m_width, m_height);
     g_signal_connect(G_OBJECT(m_imageDA), "configure_event", G_CALLBACK(HandleImageAreaConfigure), this);
     g_signal_connect(G_OBJECT(m_imageDA), "expose_event", G_CALLBACK(HandleImageAreaExpose), this);
     return m_imageDA;
@@ -2651,6 +2651,7 @@ void ImageArea::DrawArrowSimple(int x, int y, guint direction, guint directionMa
         color = g_blue;
         break;
     }
+
     gdk_gc_set_foreground(gc, color);
     gdk_gc_set_function(gc, GDK_XOR);
 
@@ -2814,4 +2815,17 @@ void ImageArea::DrawBiopsyLine(GdkFunction mode, const GdkColor* const color, in
     g_object_unref(gc);
     if (update)
         UpdateImgArea();
+}
+
+
+// ---------------------------------------------------------
+
+void ImageArea::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void ImageArea::initialize(GtkBox* box) {
+  gtk_box_pack_start(box, (GtkWidget*)Create(), TRUE, TRUE, 0);
+  AddTimeOutFps();
 }

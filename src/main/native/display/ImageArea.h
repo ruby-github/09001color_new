@@ -2,7 +2,7 @@
 #define _IMAGEAREA_H_
 
 #define IMG_AREA_W 844 //ModLayout 844 PreLayout 804  /* 1024-180 */
-#define IMG_AREA_H 560 //ModLayout 560 PreLayout 540
+#define IMG_AREA_H 568 //ModLayout 560 PreLayout 540
 
 #define IMAGE_X 110 //ModLayout 120 PreLayout 80
 #define IMAGE_Y 30 //ModLayout 30 PreLayout 20
@@ -295,6 +295,14 @@ private:
         data->ImageAreaExpose(widget, event);
         return FALSE;
     }
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 void ImageArea::UpdateImgArea() {

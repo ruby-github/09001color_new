@@ -157,6 +157,14 @@ private:
     static void HandleEntryPopup(GtkEntry *entry, GtkMenu *menu, NoteArea *data) {
         data->EntryPopup(entry, menu);
     }
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 #endif

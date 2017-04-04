@@ -437,7 +437,7 @@ void ImageAreaPara::Draw2DPara() {
     int y = 30;
 
     FillRectangle(x, y, m_eareWs, m_eareH);
-    m_ptrImg->DrawString("<b><span underline=\"low\" >2D</span></b>", x, y);
+    m_ptrImg->DrawString("<b><span underline='low' foreground='yellow'>B</span></b>", x, y);
 
     FillRectangle(x, y+20, m_eareWl, m_eareH);
     sprintf(m_bufText, "%dG %ddB %dMBP %s", m_gain2D, m_dynamicRange, m_mbp, m_tsi.c_str());
@@ -455,7 +455,7 @@ void ImageAreaPara::DrawMPara() {
     int y = 75 + 20;
 
     FillRectangle(x, y, m_eareWs, m_eareH);
-    m_ptrImg->DrawString("<b><span underline=\"low\" >M</span></b>", x, y);
+    m_ptrImg->DrawString("<b><span underline='low' foreground='yellow'>C</span></b>", x, y);
 
     FillRectangle(x, y+20, m_eareWl, m_eareH);
     sprintf(m_bufText, "%3dG", m_gainM);
@@ -469,7 +469,7 @@ void ImageAreaPara::DrawPwPara() {
     int y = 120+20+20;
 
     FillRectangle(x, y, m_eareWs, m_eareH);
-    m_ptrImg->DrawString("<b><span underline=\"low\" >Spectrum</span></b>", x, y);
+    m_ptrImg->DrawString("<b><span underline='low' >Spectrum</span></b>", x, y);
 
     DrawPwGenPara();
     DrawPwGen2Para();

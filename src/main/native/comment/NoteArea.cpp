@@ -960,3 +960,14 @@ GdkCursor* NoteArea::CustomCursor(void) {
     GdkCursor* cursor = gdk_cursor_new_from_pixbuf(display, pixbuf_scale,2,2);
     return cursor;
 }
+
+// ---------------------------------------------------------
+
+void NoteArea::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void NoteArea::initialize(GtkBox* box) {
+  gtk_box_pack_start(box, (GtkWidget*)Create(), TRUE, TRUE, 0);
+}

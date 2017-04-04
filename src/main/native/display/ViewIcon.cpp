@@ -60,10 +60,8 @@ ViewIcon* ViewIcon::GetInstance(void) {
 }
 
 void ViewIcon::Create(void) {
-    const int num = 6;
-    m_table = gtk_table_new(1, num, TRUE);
-//    gtk_widget_set_size_request (m_table, 180, 32);
-    gtk_widget_set_size_request (m_table, 26*num, 24);
+    m_table = gtk_table_new(1, 6, TRUE);
+    gtk_widget_set_size_request (m_table, m_width, m_height);
     gtk_table_set_col_spacings (GTK_TABLE (m_table), 5);
 
     m_network = create_pixmap (NetworkIconPath[0]);
@@ -83,15 +81,15 @@ void ViewIcon::Create(void) {
 
     m_charge = create_pixmap (NULL); //(CdromIconPath);
     gtk_table_attach_defaults (GTK_TABLE (m_table), m_charge, 5, 6, 0, 1);
-#if 0
+
+  #if 0
     m_printer = create_pixmap(NULL);
     gtk_table_attach_defaults (GTK_TABLE (m_table), m_printer, 5, 6, 0, 1);
-#endif
+  #endif
 
-#ifdef EMP_355
+  #ifdef EMP_355
     InitCharge();
-#endif
-
+  #endif
 }
 
 GtkWidget * ViewIcon::GetIconArea(void) {
@@ -247,4 +245,17 @@ gboolean CallBackUpdateCharge(gpointer data) {
 void ViewIcon::InitCharge() {
     UpdateCharge();
     g_timeout_add( 6000, CallBackUpdateCharge, this );
+}
+
+// ---------------------------------------------------------
+
+void ViewIcon::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void ViewIcon::initialize(GtkBox* box) {
+  Create();
+
+  gtk_box_pack_start(box, (GtkWidget*)m_table, TRUE, TRUE, 0);
 }

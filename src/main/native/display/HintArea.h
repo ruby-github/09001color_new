@@ -14,16 +14,17 @@ public:
     void ClearHint(void);
 
     guint m_timeout;
-private:
+
     HintArea();
+private:
+
     void UpdateHintArea(void);
     void DrawString(const char *str, int x, int y, GdkColor *color, PangoFontDescription *font);
 
     static HintArea* m_ptrInstance;
     GtkWidget *m_hintArea;
     GdkPixmap *m_pixmapHint;
-    int m_width;
-    int m_height;
+
 
 //signal handle
     void HintAreaConfigure(GtkWidget *widget, GdkEventConfigure *event);
@@ -37,6 +38,15 @@ private:
         data->HintAreaExpose(widget, event);
         return FALSE;
     }
+
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 inline void HintArea::UpdateHintArea(void) {

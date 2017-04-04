@@ -52,6 +52,60 @@ extern MenuPW g_menuPW;
 // test_Artifact
 // #include "imageProc/ImgProcCfm.h"
 
+
+
+//////////////////////////////////////////////////////////////////////////
+
+//       |------------------------------------- 1024 --------------------------------------|
+//                                                                             205
+// ---   |-----------------------------------------------------------------|---------------|
+//  |    |                                                                 |               |
+//  | 60 |                                Top                              |               |
+//  |    |                                                                 |               |
+//  |    |-----------------------------------------------------------------|               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+// 768   |                                Image                            |     Menu      |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |                                                                 |               |
+//  |    |-----------------------------------------------------------------|---------------|
+//  |    |                                                                                 |
+//  | 105|                                ShortcutMenu                                     |
+//  |    |                                                                                 |
+//  |    |-----------------------------------------------------------------|---------------|
+//  | 35 |                                   Hint                          |     icon      |
+// ---   |-----------------------------------------------------------------|---------------|
+
+// #define SCREEN_WIDTH  1024
+// #define SCREEN_HEIGHT 768
+
+#define MENU_WIDTH          180
+
+#define TOP_WIDTH           (SCREEN_WIDTH - MENU_WIDTH)
+#define TOP_HEIGHT          60
+
+#define SHORTCUTMENU_WIDTH  SCREEN_WIDTH
+#define SHORTCUTMENU_HEIGHT 105
+
+#define HINT_WIDTH          TOP_WIDTH
+#define HINT_HEIGHT         35
+
+#define ICON_WIDTH          MENU_WIDTH
+#define ICON_HEIGHT         HINT_HEIGHT
+
+#define IMAGE_WIDTH         TOP_WIDTH
+#define IMAGE_HEIGHT        (SCREEN_HEIGHT - TOP_HEIGHT - SHORTCUTMENU_HEIGHT - HINT_HEIGHT)
+
+#define MENU_HEIGHT         (SCREEN_HEIGHT - SHORTCUTMENU_HEIGHT - HINT_HEIGHT)
+
+//////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////[static function]/////////////////////////////
 int g_tgcSlider[8] = {128, 128, 128, 128, 128, 128, 128, 128}; // global variable of tgc control
 
@@ -2511,7 +2565,6 @@ ViewMain::ViewMain() {
     m_ptrMenuArea = MenuArea::GetInstance();
     m_ptrNoteArea = NoteArea::GetInstance();
     keyTSIN = 0;
-
 }
 
 ViewMain::~ViewMain() {
@@ -2562,71 +2615,14 @@ void ViewMain::Create(void) {
     gtk_container_set_border_width(GTK_CONTAINER(m_mainWindow), 0);
     gtk_widget_modify_bg(m_mainWindow, GTK_STATE_NORMAL, g_deep);
 
-//	g_signal_connect(m_mainWindow,"key-press-event",G_CALLBACK(HandleKeyPressEvent),this);
+    // g_signal_connect(m_mainWindow,"key-press-event",G_CALLBACK(HandleKeyPressEvent),this);
 
     m_fixedWindow = gtk_fixed_new();
     gtk_widget_set_usize(m_fixedWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
     gtk_widget_set_uposition(m_fixedWindow, 0, 0);
     gtk_container_add(GTK_CONTAINER(m_mainWindow), m_fixedWindow);
 
-    // Knob Area
-    GtkWidget *tableKnob;
-    tableKnob = m_ptrKnob->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), tableKnob, KNOB_X, KNOB_Y);
-#if 0
-    char tmp[20];
-    int detal_x = WIDTH_KNOB_MENU / 20;
-    int detal_y = HEIGHT_KNOB_MENU / 3;
-    GtkWidget* label_tmp;
-    for(int i = 0; i < 5; i++) {
-        sprintf(tmp, "F%d", i+1);
-        label_tmp = gtk_label_new_with_mnemonic(tmp);
-        gtk_fixed_put(GTK_FIXED(m_fixedWindow), label_tmp, KNOB_X + detal_x + i * detal_x * 18 / 5, KNOB_Y + detal_y);
-    }
-#endif
-    // Menu Area
-    GtkWidget *tableMenu;
-    tableMenu = m_ptrMenuArea->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), tableMenu, 0, TOP_AREA_H);
-
-    m_daMenu = gtk_drawing_area_new();
-    gtk_widget_modify_bg(m_daMenu, GTK_STATE_NORMAL, g_black);
-    gtk_drawing_area_size(GTK_DRAWING_AREA(m_daMenu), MENU_AREA_W, IMG_AREA_H+HINT_AREA_H);
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), m_daMenu, 0, TOP_AREA_H+2);
-
-    // 2D knob menu
-    KnobD2Create();
-
-    // image area
-    GtkWidget *da_image;
-    da_image = m_ptrImgArea->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), da_image, IMG_AREA_X, IMG_AREA_Y);
-    m_ptrImgArea->AddTimeOutFps();
-
-    // note area
-    GtkWidget *canvas_note;
-    canvas_note = m_ptrNoteArea->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), canvas_note, IMAGE_X+IMG_AREA_X, IMAGE_Y+IMG_AREA_Y);
-
-    // Top area
-    GtkWidget *da_topArea;
-    da_topArea = m_ptrTopArea->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), da_topArea, TOP_AREA_X, TOP_AREA_Y);
-    m_ptrTopArea->AddTimeOut();
-
-    // status area
-    // GtkWidget *status_area = gtk_drawing_area_new();
-    // gtk_drawing_area_size(GTK_DRAWING_AREA(status_area), STATUS_WIDTH, STATUS_HEIGHT);
-    // gtk_fixed_put(GTK_FIXED(m_fixedWindow),status_area, STATUS_X, STATUS_Y);
-    // gtk_widget_modify_bg(status_area, GTK_STATE_NORMAL, g_black);
-
-    GtkWidget *da_hintArea;
-    da_hintArea = m_ptrHintArea->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), da_hintArea, HINT_X, HINT_Y);
-
-    // icon view
-    ViewIcon::GetInstance()->Create();
-    gtk_fixed_put(GTK_FIXED(m_fixedWindow), ViewIcon::GetInstance()->GetIconArea(), 5, 742); // 740
+    initialize();
 
     g_keyInterface.Push(this);
 
@@ -2658,13 +2654,13 @@ void ViewMain::Create(void) {
     //ClickArchive(NULL);
     //test(NULL);
 
-#ifdef EMP_3410
+    #ifdef EMP_3410
     if(g_authorizationOn)
         CEmpAuthorization::Create(&g_keyInterface, REGISTER_FILE_PATH, 0);
-#else
+    #else
     if(g_authorizationOn)
         CEmpAuthorization::Create(&g_keyInterface, REGISTER_FILE_PATH, 1);
-#endif
+    #endif
 }
 
 void ViewMain::MySleep(int msecond) {
@@ -2672,22 +2668,65 @@ void ViewMain::MySleep(int msecond) {
     usleep(msecond * sum);
 }
 
-/*gboolean ViewMain::KeyFilter(GtkWidget* entry,GdkEventKey* event)
-{
-	switch(event->keyval)
-	{
-		case GDK_F1:
-		MenuArea::GetInstance()->ShowBiopsyMenu();
 
-			break;
-		case GDK_F2:
-			MenuArea::GetInstance()->ShowBioBracketMenu();
-			break;
-		case GDK_F3:
-			MenuArea::GetInstance()->ShowBioVerifyMenu();
-			break;
-		default:
-			break;
-	}
-	return TRUE;
-}*/
+// ---------------------------------------------------------
+
+void ViewMain::initialize() {
+  // Top
+  GtkBox* box_top = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_top, 0, 0);
+
+  m_ptrTopArea->set_size(TOP_WIDTH, TOP_HEIGHT);
+  m_ptrTopArea->initialize(box_top);
+
+  // image
+  GtkBox* box_image = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_image, 0, TOP_HEIGHT);
+
+  m_ptrImgArea->set_size(IMAGE_WIDTH, IMAGE_HEIGHT);
+  m_ptrImgArea->initialize(box_image);
+
+  // Note
+  GtkBox* box_note = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_note, 110, TOP_HEIGHT + 30);
+
+  m_ptrNoteArea->set_size(IMAGE_WIDTH - 150, IMAGE_HEIGHT - 60);
+  m_ptrNoteArea->initialize(box_note);
+
+  // ShortcutMenu
+  GtkBox* box_shortcutmenu = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_shortcutmenu, 0, (SCREEN_HEIGHT - SHORTCUTMENU_HEIGHT - HINT_HEIGHT));
+
+  m_ptrKnob->set_size(SHORTCUTMENU_WIDTH, SHORTCUTMENU_HEIGHT);
+  m_ptrKnob->initialize(box_shortcutmenu);
+
+  // hint
+  GtkBox* box_hint = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_hint, 0, SCREEN_HEIGHT - HINT_HEIGHT);
+
+  m_ptrHintArea->set_size(HINT_WIDTH, HINT_HEIGHT);
+  m_ptrHintArea->initialize(box_hint);
+
+  // icon
+  GtkBox* box_icon = GTK_BOX(gtk_hbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_icon, HINT_WIDTH, SCREEN_HEIGHT - HINT_HEIGHT);
+
+  ViewIcon::GetInstance()->set_size(ICON_WIDTH, ICON_HEIGHT);
+  ViewIcon::GetInstance()->initialize(box_icon);
+
+  // Menu
+  GtkBox* box_menu = GTK_BOX(gtk_vbox_new(FALSE, 0));
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), (GtkWidget*)box_menu, TOP_WIDTH, 0);
+
+  m_ptrMenuArea->set_size(MENU_WIDTH, MENU_HEIGHT);
+  m_ptrMenuArea->initialize(box_menu);
+
+  // daMenu
+  m_daMenu = gtk_drawing_area_new();
+  gtk_widget_modify_bg(m_daMenu, GTK_STATE_NORMAL, g_black);
+  gtk_drawing_area_size(GTK_DRAWING_AREA(m_daMenu), MENU_WIDTH, MENU_HEIGHT);
+  gtk_fixed_put(GTK_FIXED(m_fixedWindow), m_daMenu, TOP_WIDTH, TOP_HEIGHT);
+
+  // 2D knob menu
+  KnobD2Create();
+}

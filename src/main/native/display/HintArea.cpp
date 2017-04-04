@@ -125,3 +125,14 @@ void HintArea::DrawString(const char *str, int x, int y, GdkColor *color, PangoF
 
     UpdateHintArea();
 }
+
+// ---------------------------------------------------------
+
+void HintArea::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void HintArea::initialize(GtkBox* box) {
+  gtk_box_pack_start(box, (GtkWidget*)Create(), TRUE, TRUE, 0);
+}

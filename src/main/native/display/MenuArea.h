@@ -51,8 +51,9 @@ public:
     void GetMenuIndex(int &index);
     void ShowBioBracketMenu(void);
     void ShowBioVerifyMenu(void);
-private:
+
     MenuArea();
+private:
     static MenuArea *m_ptrInstance;
 
     void HideCurMenuChild(void);
@@ -82,6 +83,14 @@ private:
     }
 
     void HideAllOtherMenu(void);
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 extern void MenuShowUndo();

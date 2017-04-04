@@ -289,7 +289,7 @@ void TopArea::DrawDateTime(void) {
 
 GtkWidget * TopArea::Create(void) {
     m_topArea = gtk_drawing_area_new();
-    gtk_drawing_area_size(GTK_DRAWING_AREA(m_topArea), TOP_AREA_W, TOP_AREA_H);
+    gtk_drawing_area_size(GTK_DRAWING_AREA(m_topArea), m_width, m_height);
     g_signal_connect(G_OBJECT(m_topArea), "configure_event", G_CALLBACK(HandleTopAreaConfigure), this);
     g_signal_connect(G_OBJECT(m_topArea), "expose_event", G_CALLBACK(HandleTopAreaExpose), this);
 
@@ -425,4 +425,16 @@ void TopArea::ClearArea(int x, int y, int width, int height) {
 
     gdk_draw_rectangle(m_pixmapTop, gc, TRUE, x, y, width, height);
     g_object_unref(gc);
+}
+
+// ---------------------------------------------------------
+
+void TopArea::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void TopArea::initialize(GtkBox* box) {
+  gtk_box_pack_start(box, (GtkWidget*)Create(), TRUE, TRUE, 0);
+  AddTimeOut();
 }

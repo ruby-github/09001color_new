@@ -49,5 +49,13 @@ private:
 
     int m_countScanIcon;
     int m_timeout;
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 #endif

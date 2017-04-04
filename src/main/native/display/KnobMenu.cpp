@@ -121,8 +121,6 @@ GtkWidget * KnobMenu::Create(void) {
     gtk_widget_modify_bg(btn_right, GTK_STATE_PRELIGHT, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_ACTIVE, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_INSENSITIVE, g_deepGray);
-
-    gtk_widget_set_usize(m_tableKnob, WIDTH_KNOB_MENU, HEIGHT_KNOB_MENU);
 #elif defined (EMP_313)
     GtkWidget *m_tableKnob = gtk_table_new(1, 20, TRUE);
 
@@ -211,8 +209,6 @@ GtkWidget * KnobMenu::Create(void) {
     gtk_widget_modify_bg(btn_right, GTK_STATE_PRELIGHT, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_ACTIVE, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_INSENSITIVE, g_deepGray);
-
-    gtk_widget_set_usize(m_tableKnob, WIDTH_KNOB_MENU, HEIGHT_KNOB_MENU);
 #else
 
     GtkWidget *m_tableKnob = gtk_table_new(1, 22, TRUE);
@@ -290,8 +286,6 @@ GtkWidget * KnobMenu::Create(void) {
     gtk_widget_modify_bg(btn_right, GTK_STATE_PRELIGHT, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_ACTIVE, g_deep);
     gtk_widget_modify_bg(btn_right, GTK_STATE_INSENSITIVE, g_deepGray);
-
-    gtk_widget_set_usize(m_tableKnob, WIDTH_KNOB_MENU, HEIGHT_KNOB_MENU);
 #endif
     return m_tableKnob;
 }
@@ -725,4 +719,18 @@ void KnobMenu::Knob6_Press(void) {
         return ;
 
     (*(m_KnobItem[index].pfPress))();
+}
+
+// ---------------------------------------------------------
+
+void KnobMenu::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void KnobMenu::initialize(GtkBox* box) {
+  GtkWidget* table = Create();
+  gtk_widget_set_usize(table, m_width, m_height);
+
+  gtk_box_pack_start(box, (GtkWidget*)table, TRUE, TRUE, 0);
 }

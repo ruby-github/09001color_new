@@ -26,6 +26,27 @@
 #include "keyboard/KeyFunc.h"
 #include "keyboard/LightDef.h"
 
+
+// ---   |---------------|
+//  |    |               |
+//  | 60 |     label     |
+//  |    |               |
+// ---   |---------------|
+//       |               |
+//       |     menu      |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |               |
+//       |---------------|
+
+#define LABEL_HEIGHT  60
+
 MenuArea* MenuArea::m_ptrInstance = NULL;
 
 MenuArea* MenuArea::GetInstance() {
@@ -42,14 +63,9 @@ MenuArea::MenuArea() {
 }
 
 GtkWidget* MenuArea::Create(void) {
-    const int widthMax = MENU_AREA_W - 5;
-    const int heightMax = MENU_AREA_H - TOP_AREA_H;
-    const int heightMaxNB = MENU_AREA_H - TOP_AREA_H - 30;
-    PangoFontDescription *font = pango_font_description_from_string("WenQuanYi Zen Hei, bold, 14");
-    m_labelSub = create_label(_("Sub Menu"), widthMax, TOP_AREA_H, g_white, font);
-    gtk_label_set_justify(GTK_LABEL(m_labelSub), GTK_JUSTIFY_CENTER);
-    gtk_fixed_put(GTK_FIXED(ViewMain::GetInstance()->GetMainWindowFixed()), m_labelSub, 0, 0);
-    pango_font_description_free(font);
+    const int widthMax = m_width;
+    const int heightMax = m_height - LABEL_HEIGHT;
+    const int heightMaxNB = heightMax - 30;
 
     m_fixedMenu = gtk_fixed_new();
     gtk_widget_set_usize(m_fixedMenu, widthMax, heightMax);
@@ -109,50 +125,51 @@ GtkWidget* MenuArea::Create(void) {
 
     //Measure2D menu
     GtkWidget *nbMeasure = g_menuMeasure.Create();
-    gtk_widget_set_usize(nbMeasure, widthMax+5, heightMax);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), nbMeasure, 0, 0);
+    gtk_widget_set_usize(nbMeasure, widthMax, heightMaxNB);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), nbMeasure);
 
     //BodyMark menu
     GtkWidget *fixedBDMK = g_menuBDMK.Create();
     gtk_widget_set_usize(fixedBDMK, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), fixedBDMK, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), fixedBDMK);
 
     //Review menu
     GtkWidget *fixedReview = g_menuReview.Create();
     gtk_widget_set_usize(fixedReview, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), fixedReview, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), fixedReview);
 
     //Calc menu
     GtkWidget *vboxCalc = g_menuCalc.Create();
-    gtk_widget_set_usize(vboxCalc, widthMax, heightMax);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), vboxCalc, 0, 0);
+    gtk_widget_set_usize(vboxCalc, widthMax, heightMaxNB);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), vboxCalc);
 
     //Note menu
     GtkWidget *fixedNote = g_menuNote.Create();
-    gtk_widget_set_usize(fixedNote, widthMax, heightMax);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), fixedNote, 0, 0);
+    gtk_widget_set_usize(fixedNote, widthMax, heightMaxNB);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), fixedNote);
 
     //Other menu
     GtkWidget *vboxBiopsy = g_menuBiopsy.Create();
     gtk_widget_set_usize(vboxBiopsy, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), vboxBiopsy, 0, 0);
-//-------------------------2016.07.26--------------------------------------//
+    gtk_container_add (GTK_CONTAINER (m_noteBook), vboxBiopsy);
+
+    //-------------------------2016.07.26--------------------------------------//
     GtkWidget *vboxBiopsyBracket = g_menuBiopsyBracket.Create();
     gtk_widget_set_usize(vboxBiopsyBracket, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), vboxBiopsyBracket, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), vboxBiopsyBracket);
 
     GtkWidget *vboxBiopsyVerify = g_menuBiopsyVerify.Create();
     gtk_widget_set_usize(vboxBiopsyVerify, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), vboxBiopsyVerify, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), vboxBiopsyVerify);
 
-//-------------------------------------------------------------------//
+    //-------------------------------------------------------------------//
     GtkWidget *tableSystem = g_menuSystem.Create();
     gtk_widget_set_usize(tableSystem, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), tableSystem, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), tableSystem);
 
     GtkWidget *tableEFOV = g_menuEFOV.Create();
     gtk_widget_set_usize(tableEFOV, widthMax, heightMaxNB);
-    gtk_fixed_put(GTK_FIXED(m_fixedMenu), tableEFOV, 0, 0);
+    gtk_container_add (GTK_CONTAINER (m_noteBook), tableEFOV);
 
     return m_fixedMenu;
 }
@@ -750,4 +767,23 @@ MenuArea::EMenuType MenuArea::GetNotebookType(void) {
         return CFM;
     } else
         return m_menuType;
+}
+
+// ---------------------------------------------------------
+
+void MenuArea::set_size(int width, int height) {
+  m_width = width;
+  m_height = height;
+}
+
+void MenuArea::initialize(GtkBox* box) {
+  // label
+  PangoFontDescription *font = pango_font_description_from_string("WenQuanYi Zen Hei, bold, 14");
+  m_labelSub = create_label(_("Sub Menu"), m_width, LABEL_HEIGHT, g_white, font);
+  pango_font_description_free(font);
+
+  gtk_label_set_justify(GTK_LABEL(m_labelSub), GTK_JUSTIFY_CENTER);
+
+  gtk_box_pack_start(box, (GtkWidget*)m_labelSub, FALSE, FALSE, 0);
+  gtk_box_pack_start(box, (GtkWidget*)Create(), TRUE, TRUE, 0);
 }

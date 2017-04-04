@@ -103,6 +103,13 @@ private:
 //     static gboolean HandleKnobPress_5(GtkWidget *widget, GdkEventButton *event, KnobMenu *data)
 // 	{ data->KnobPress_5(widget, event); return FALSE; }
 
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 #endif

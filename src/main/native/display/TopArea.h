@@ -6,7 +6,7 @@
 #include <string>
 
 #define TOP_AREA_W 844 //ModLayout 844 PreLayout 804
-#define TOP_AREA_H 100-2
+#define TOP_AREA_H 60
 /*
  *      Logo |    Hospital        |  Probe     |  TIS |  Time
  *           |                    |            |      |
@@ -96,6 +96,14 @@ private:
         data->TopAreaExpose(widget, event);
         return FALSE;
     }
+
+public:
+  void set_size(int width, int height);
+  void initialize(GtkBox* box);
+
+private:
+  int m_width;
+  int m_height;
 };
 
 inline void TopArea::UpdateTopArea(void) {
